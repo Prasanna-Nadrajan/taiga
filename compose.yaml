@@ -1,0 +1,36 @@
+services:
+  # 1. The Database (MongoDB)
+  mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # 2. The Node.js Backend
+  backend:
+    build:
+      context: ./server
+    restart: always
+    ports:
+      - "5000:5000"
+    # THIS FIXES THE JWT ERROR:
+    env_file: ./server/.env 
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/taiga_db
+    depends_on:
+      - mongodb
+
+  # 3. The React Frontend (Nginx)
+  frontend:
+    build:
+      context: ./client
+    restart: always
+    ports:
+      - "5173:80"  # Map your local 5173 to Nginx port 80
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
