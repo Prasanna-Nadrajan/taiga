@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { FiShoppingCart, FiArrowLeft, FiStar } from 'react-icons/fi';
+import ReviewSection from '../components/ReviewSection';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -91,6 +92,7 @@ const ProductDetail = () => {
           )}
         </div>
       </div>
+      <ReviewSection productId={product._id} />
     </div>
   );
 };

@@ -4,12 +4,28 @@ const Product = require('../models/Product');
 // @route   GET /api/products
 exports.getProducts = async (req, res) => {
   try {
-    const { category, search, sort, page = 1, limit = 12 } = req.query;
+    const { category, search, sort, page = 1, limit = 12, minPrice, maxPrice, minRating } = req.query;
     const query = {};
 
-    if (category) query.category = category;
+    if (category) {
+      // If categories are passed as a comma-separated list
+      query.category = { $in: category.split(',') };
+    }
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    if (minRating) {
+      query.rating = { $gte: Number(minRating) };
     }
 
     let sortOption = { createdAt: -1 };

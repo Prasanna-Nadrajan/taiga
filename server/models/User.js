@@ -18,13 +18,21 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
+    required: [
+      function() { return !this.googleId; },
+      'Please provide a password'
+    ],
     minlength: 6,
     select: false
   },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
   role: {
     type: String,
-    enum: ['customer', 'vendor', 'delivery_agent'],
+    enum: ['customer', 'vendor', 'delivery_agent', 'admin'],
     default: 'customer'
   },
   phone: {
@@ -41,7 +49,11 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: ''
-  }
+  },
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }]
 }, {
   timestamps: true
 });

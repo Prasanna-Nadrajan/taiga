@@ -2,6 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const session = require('express-session');
+const passport = require('passport');
+
+// Load passport config
+require('./config/passport');
 
 // Load env vars
 dotenv.config();
@@ -15,12 +20,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Session middleware for passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'taiga_secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/delivery', require('./routes/delivery'));
 app.use('/api/categories', require('./routes/categories'));
+app.use('/api/reviews', require('./routes/reviews'));
 
 // Health check
 app.get('/api/health', (req, res) => {

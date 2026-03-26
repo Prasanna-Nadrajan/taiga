@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import API from '../api/axios';
 import ProductCard from '../components/ProductCard';
+import FilterSidebar from '../components/FilterSidebar';
 import { FiFilter } from 'react-icons/fi';
 
 const Home = () => {
@@ -9,7 +10,7 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [filters, setFilters] = useState({ category: '', minPrice: '', maxPrice: '', minRating: 0 });
   const [sortBy, setSortBy] = useState('');
 
   const search = searchParams.get('search') || '';
@@ -20,7 +21,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [search, selectedCategory, sortBy]);
+  }, [search, filters, sortBy]);
 
   const fetchCategories = async () => {
     try {
@@ -36,7 +37,10 @@ const Home = () => {
     try {
       const params = new URLSearchParams();
       if (search) params.append('search', search);
-      if (selectedCategory) params.append('category', selectedCategory);
+      if (filters.category) params.append('category', filters.category);
+      if (filters.minPrice) params.append('minPrice', filters.minPrice);
+      if (filters.maxPrice) params.append('maxPrice', filters.maxPrice);
+      if (filters.minRating) params.append('minRating', filters.minRating);
       if (sortBy) params.append('sort', sortBy);
       const { data } = await API.get(`/products?${params.toString()}`);
       setProducts(data.products);
@@ -75,57 +79,52 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="home-container">
-        <div className="filters-bar">
-          <FiFilter className="filter-icon" />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="filter-select"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>{cat.name}</option>
-            ))}
-          </select>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="filter-select"
-          >
-            <option value="">Sort by: Newest</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
-            <option value="rating">Top Rated</option>
-          </select>
+      <div className="home-container" style={{ display: 'flex', gap: '20px', padding: '20px' }}>
+        
+        {/* SIDEBAR FOR DESKTOP */}
+        <div className="home-sidebar" style={{ display: 'flex', flexDirection: 'column' }}>
+           <FilterSidebar categories={categories} onFilterChange={setFilters} />
         </div>
 
-        {search && (
-          <div className="search-results-info">
-            Showing results for: <strong>"{search}"</strong>
+        <div className="home-main" style={{ flex: 1 }}>
+          <div className="filters-bar" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div className="search-results-info">
+              {search && <span>Showing results for: <strong>"{search}"</strong></span>}
+            </div>
+            
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">Sort by: Newest</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+            </select>
           </div>
-        )}
 
-        {loading ? (
-          <div className="loading-screen">
-            <div className="spinner"></div>
-          </div>
-        ) : products.length === 0 ? (
-          <div className="empty-state">
-            <h2>No products found</h2>
-            <p>Try adjusting your search or filters</p>
-          </div>
-        ) : (
-          <div className="products-grid">
-            {products.map((product) => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                onAddToCart={addToCart}
-              />
-            ))}
-          </div>
-        )}
+          {loading ? (
+            <div className="loading-screen">
+              <div className="spinner"></div>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="empty-state">
+              <h2>No products found</h2>
+              <p>Try adjusting your search or filters</p>
+            </div>
+          ) : (
+            <div className="products-grid">
+              {products.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onAddToCart={addToCart}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

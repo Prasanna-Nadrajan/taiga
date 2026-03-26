@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { FiShoppingCart, FiStar } from 'react-icons/fi';
+import HeartIcon from './HeartIcon';
 
 const ProductCard = ({ product, onAddToCart }) => {
   return (
-    <div className="product-card">
+    <div className="product-card" style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 2 }}>
+        <HeartIcon productId={product._id} />
+      </div>
       <Link to={`/product/${product._id}`} className="product-image-link">
         <img
           src={product.image || 'https://via.placeholder.com/300x300?text=No+Image'}

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiShoppingCart, FiUser, FiLogOut, FiPackage, FiTruck, FiMenu, FiX } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiLogOut, FiPackage, FiTruck, FiMenu, FiX, FiHeart } from 'react-icons/fi';
 import { useState } from 'react';
+import SearchBar from './SearchBar';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -16,6 +17,7 @@ const Navbar = () => {
   const getDashboardLink = () => {
     if (!user) return '/';
     switch (user.role) {
+      case 'admin': return '/admin';
       case 'vendor': return '/vendor';
       case 'delivery_agent': return '/delivery';
       default: return '/';
@@ -28,6 +30,7 @@ const Navbar = () => {
       case 'customer': return 'Customer';
       case 'vendor': return 'Vendor';
       case 'delivery_agent': return 'Delivery Agent';
+      case 'admin': return 'Administrator';
       default: return '';
     }
   };
@@ -42,16 +45,7 @@ const Navbar = () => {
 
         {user?.role === 'customer' && (
           <div className="navbar-search">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="search-input"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && e.target.value.trim()) {
-                  navigate(`/?search=${e.target.value.trim()}`);
-                }
-              }}
-            />
+            <SearchBar />
           </div>
         )}
 
@@ -69,6 +63,9 @@ const Navbar = () => {
                   </Link>
                   <Link to="/cart" className="nav-link" onClick={() => setMenuOpen(false)}>
                     <FiShoppingCart /> Cart
+                  </Link>
+                  <Link to="/wishlist" className="nav-link" onClick={() => setMenuOpen(false)}>
+                    <FiHeart /> Wishlist
                   </Link>
                   <Link to="/orders" className="nav-link" onClick={() => setMenuOpen(false)}>
                     <FiPackage /> My Orders
@@ -92,6 +89,16 @@ const Navbar = () => {
                 <Link to="/delivery" className="nav-link" onClick={() => setMenuOpen(false)}>
                   <FiTruck /> My Deliveries
                 </Link>
+              )}
+              {user.role === 'admin' && (
+                <>
+                  <Link to="/admin" className="nav-link" onClick={() => setMenuOpen(false)}>
+                    Dashboard
+                  </Link>
+                  <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
+                    Storefront
+                  </Link>
+                </>
               )}
               <div className="nav-user">
                 <div className="user-info">

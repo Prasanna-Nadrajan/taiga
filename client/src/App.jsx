@@ -8,11 +8,13 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
+import Wishlist from './pages/Wishlist';
 import CustomerOrders from './pages/CustomerOrders';
 import VendorDashboard from './pages/VendorDashboard';
 import VendorProducts from './pages/VendorProducts';
 import VendorOrders from './pages/VendorOrders';
 import DeliveryDashboard from './pages/DeliveryDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -41,6 +43,11 @@ function App() {
                   <CustomerOrders />
                 </ProtectedRoute>
               } />
+              <Route path="/wishlist" element={
+                <ProtectedRoute roles={['customer']}>
+                  <Wishlist />
+                </ProtectedRoute>
+              } />
 
               {/* Vendor Routes */}
               <Route path="/vendor" element={
@@ -63,6 +70,13 @@ function App() {
               <Route path="/delivery" element={
                 <ProtectedRoute roles={['delivery_agent']}>
                   <DeliveryDashboard />
+                </ProtectedRoute>
+              } />
+
+              {/* Admin Routes */}
+              <Route path="/admin" element={
+                <ProtectedRoute roles={['admin']}>
+                  <AdminDashboard />
                 </ProtectedRoute>
               } />
 

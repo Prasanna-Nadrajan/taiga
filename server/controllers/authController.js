@@ -37,6 +37,7 @@ exports.register = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      wishlist: user.wishlist || [],
       token
     });
   } catch (error) {
@@ -67,6 +68,7 @@ exports.login = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      wishlist: user.wishlist || [],
       token
     });
   } catch (error) {
@@ -87,8 +89,58 @@ exports.getMe = async (req, res) => {
       phone: user.phone,
       address: user.address,
       avatar: user.avatar,
+      wishlist: user.wishlist || [],
       createdAt: user.createdAt
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Google OAuth Callback
+// @route   GET /api/auth/google/callback
+exports.googleCallback = (req, res) => {
+  try {
+    const token = generateToken(req.user._id);
+    // Redirect to frontend with token in URL
+    // In production, this should match your actual frontend URL
+    const frontendURL = process.env.FRONTEND_URL || 'http://localhost:5173';
+    res.redirect(`${frontendURL}/login?token=${token}`);
+  } catch (error) {
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=auth_failed`);
+  }
+};
+
+// @desc    Toggle item in wishlist
+// @route   PUT /api/auth/wishlist/:productId
+exports.toggleWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const productId = req.params.productId;
+    
+    const index = user.wishlist.indexOf(productId);
+    if (index > -1) {
+      user.wishlist.splice(index, 1);
+    } else {
+      user.wishlist.push(productId);
+    }
+    
+    await user.save();
+    res.json(user.wishlist);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get populated wishlist
+// @route   GET /api/auth/wishlist
+exports.getWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: 'wishlist',
+      populate: { path: 'category', select: 'name' }
+    });
+    res.json(user.wishlist);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
