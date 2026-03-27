@@ -479,30 +479,227 @@
 }
 
 /* ============ HOME PAGE ============ */
-/* Hero / banner strip */
-.home-hero {
-  background: linear-gradient(135deg, #232f3e 0%, #37475a 100%);
-  padding: 48px 24px 60px;
-  text-align: center;
-}
-
-.hero-content h1 {
-  font-size: 36px;
-  font-weight: 800;
+/* Hero Carousel */
+.hero-carousel {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   color: #fff;
-  margin-bottom: 8px;
+  text-align: center;
+  transition: background 0.5s ease-in-out;
+  margin-bottom: 0;
 }
 
-.highlight {
+.hero-carousel-content {
+  max-width: 800px;
+  z-index: 10;
+  padding: 0 20px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-emoji {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 32px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+
+.hero-arrow:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-arrow-left { left: 20px; }
+.hero-arrow-right { right: 20px; }
+
+.hero-dots {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero-dot.active {
+  background: #fff;
+  transform: scale(1.2);
+}
+
+/* Category Tags Bar */
+.category-tags-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.category-tags-bar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.category-tags-inner {
+  display: flex;
+  gap: 12px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.category-tag {
+  white-space: nowrap;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.category-tag:hover {
+  background: #e2e5e9;
+}
+
+.category-tag.active {
+  background: #fff4e5;
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+/* Feature Highlights Strip */
+.feature-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 32px 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.feature-icon {
+  font-size: 32px;
   color: var(--accent);
-  background: none;
-  -webkit-text-fill-color: unset;
 }
 
-.hero-content p {
+.feature-item strong {
+  display: block;
   font-size: 16px;
-  color: var(--text-nav-muted);
-  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.feature-item span {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Home Sections (Deals, Top Rated) */
+.home-section {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px 16px 0;
+}
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.product-scroll-row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scrollbar-width: thin;
+}
+
+.product-scroll-row::-webkit-scrollbar {
+  height: 8px;
+}
+.product-scroll-row::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+.product-scroll-row::-webkit-scrollbar-thumb {
+  background: #bbb; 
+  border-radius: 4px;
+}
+.product-scroll-row::-webkit-scrollbar-thumb:hover {
+  background: #999; 
+}
+
+.scroll-card {
+  min-width: 240px;
+  max-width: 240px;
+  flex-shrink: 0;
 }
 
 .home-container {
