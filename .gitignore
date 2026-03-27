@@ -1,0 +1,15 @@
+# Prerequisites
+node_modules/
+dist/
+build/
+.env
+
+# Local logs
+*.log
+npm-debug.log*
+
+# Editor/System files
+.vscode/
+.idea/
+.DS_Store
+*.swp
