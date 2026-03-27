@@ -15,9 +15,16 @@ dotenv.config();
 connectDB();
 
 const app = express();
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'https://your-taiga-frontend.vercel.app' // We will get this URL in the next step
+];
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 // Session middleware for passport
