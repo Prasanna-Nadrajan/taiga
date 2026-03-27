@@ -17,7 +17,8 @@ connectDB();
 const app = express();
 const allowedOrigins = [
   'http://localhost:5173', 
-  'https://taiga-theta.vercel.app' // We will get this URL in the next step
+  'https://taiga-theta.vercel.app',
+  /\.vercel\.app$/  // This regex allows ANY vercel.app subdomain
 ];
 
 // Middleware
