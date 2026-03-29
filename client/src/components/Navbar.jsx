@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiShoppingCart, FiUser, FiLogOut, FiPackage, FiTruck, FiMenu, FiX, FiHeart } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiLogOut, FiPackage, FiTruck, FiMenu, FiX, FiHeart, FiMapPin } from 'react-icons/fi';
 import { useState } from 'react';
 import SearchBar from './SearchBar';
 
@@ -36,90 +36,117 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
+    <header className="navbar-container">
+      <div className="navbar-top">
         <Link to={getDashboardLink()} className="navbar-brand">
-          <span className="brand-icon">🐯</span>
-          <span className="brand-text">TAIGA</span>
+          <span className="brand-text">TAIGA</span><span className="brand-domain">.in</span>
         </Link>
 
-        {user?.role === 'customer' && (
+        {(!user || user?.role === 'customer') && (
+          <div className="nav-locator nav-hover">
+            <FiMapPin className="locator-icon" />
+            <div className="locator-text">
+              <span className="nav-label-small">Delivering to Home</span>
+              <span className="nav-label-main">Update location</span>
+            </div>
+          </div>
+        )}
+
+        {(!user || user?.role === 'customer') && (
           <div className="navbar-search">
             <SearchBar />
           </div>
         )}
 
-        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <FiX /> : <FiMenu />}
-        </button>
-
-        <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
+        <div className="nav-right">
           {user ? (
             <>
-              {user.role === 'customer' && (
-                <>
-                  <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiPackage /> Products
-                  </Link>
-                  <Link to="/cart" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiShoppingCart /> Cart
-                  </Link>
-                  <Link to="/wishlist" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiHeart /> Wishlist
-                  </Link>
-                  <Link to="/orders" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiPackage /> My Orders
-                  </Link>
-                </>
-              )}
-              {user.role === 'vendor' && (
-                <>
-                  <Link to="/vendor" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    Dashboard
-                  </Link>
-                  <Link to="/vendor/products" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiPackage /> Products
-                  </Link>
-                  <Link to="/vendor/orders" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiShoppingCart /> Orders
-                  </Link>
-                </>
-              )}
-              {user.role === 'delivery_agent' && (
-                <Link to="/delivery" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  <FiTruck /> My Deliveries
+              <div className="nav-user nav-hover">
+                <div className="user-info">
+                  <span className="nav-label-small">Hello, {user.name.split(' ')[0]}</span>
+                  <span className="nav-label-main">Accounts & Lists ({getRoleName()})</span>
+                </div>
+                <div className="dropdown-content">
+                  <button className="btn-logout" onClick={handleLogout}>Logout</button>
+                </div>
+              </div>
+
+              {(!user || user.role === 'customer') && (
+                <Link to="/orders" className="nav-orders nav-hover">
+                  <span className="nav-label-small">Returns</span>
+                  <span className="nav-label-main">& Orders</span>
                 </Link>
               )}
-              {user.role === 'admin' && (
-                <>
-                  <Link to="/admin" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    Dashboard
-                  </Link>
-                  <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    Storefront
-                  </Link>
-                </>
+
+              {(!user || user.role === 'customer') && (
+                <Link to="/cart" className="nav-cart nav-hover">
+                  <div className="cart-icon-wrapper">
+                    <span className="cart-count">0</span>
+                    <FiShoppingCart className="cart-icon-img" />
+                  </div>
+                  <span className="nav-label-main cart-label">Cart</span>
+                </Link>
               )}
-              <div className="nav-user">
-                <div className="user-info">
-                  <FiUser />
-                  <span>{user.name}</span>
-                  <span className="role-tag">{getRoleName()}</span>
-                </div>
-                <button className="btn-logout" onClick={handleLogout}>
-                  <FiLogOut /> Logout
-                </button>
-              </div>
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-link" onClick={() => setMenuOpen(false)}>Login</Link>
-              <Link to="/register" className="nav-link btn-register" onClick={() => setMenuOpen(false)}>Register</Link>
+              <Link to="/login" className="nav-user nav-hover" style={{ textDecoration: 'none' }}>
+                <div className="user-info">
+                  <span className="nav-label-small">Hello, sign in</span>
+                  <span className="nav-label-main">Accounts & Lists</span>
+                </div>
+              </Link>
+
+              <Link to="/login" className="nav-orders nav-hover" style={{ textDecoration: 'none' }}>
+                <span className="nav-label-small">Returns</span>
+                <span className="nav-label-main">& Orders</span>
+              </Link>
+
+              <Link to="/cart" className="nav-cart nav-hover" style={{ textDecoration: 'none' }}>
+                <div className="cart-icon-wrapper">
+                  <span className="cart-count">0</span>
+                  <FiShoppingCart className="cart-icon-img" />
+                </div>
+                <span className="nav-label-main cart-label">Cart</span>
+              </Link>
             </>
           )}
         </div>
       </div>
-    </nav>
+
+      <div className="navbar-bottom">
+        <button className="menu-toggle nav-hover" onClick={() => setMenuOpen(!menuOpen)}>
+          <FiMenu className="menu-icon" /> All
+        </button>
+
+        <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
+          {(!user || user?.role === 'customer') ? (
+            <>
+              <Link to="/" className="bottom-link">Fresh</Link>
+              <Link to="/" className="bottom-link">Sell</Link>
+              <Link to="/" className="bottom-link">Best Sellers</Link>
+              <Link to="/" className="bottom-link">Today's Deals</Link>
+              <Link to="/" className="bottom-link">Mobiles</Link>
+            </>
+          ) : user?.role === 'vendor' ? (
+            <>
+              <Link to="/vendor" className="bottom-link">Dashboard</Link>
+              <Link to="/vendor/products" className="bottom-link">Products</Link>
+              <Link to="/vendor/orders" className="bottom-link">Orders</Link>
+            </>
+          ) : user?.role === 'delivery_agent' ? (
+            <>
+              <Link to="/delivery" className="bottom-link">My Deliveries</Link>
+            </>
+          ) : user?.role === 'admin' ? (
+            <>
+              <Link to="/admin" className="bottom-link">Dashboard</Link>
+              <Link to="/" className="bottom-link">Storefront</Link>
+            </>
+          ) : null}
+        </div>
+      </div>
+    </header>
   );
 };
 

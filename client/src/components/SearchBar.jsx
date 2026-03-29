@@ -68,7 +68,7 @@ const SearchBar = () => {
         </select>
         <input
           type="text"
-          placeholder="Search Amazon.in"
+          placeholder="Search Taiga"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -80,7 +80,7 @@ const SearchBar = () => {
           <FiSearch className="search-btn-icon" />
         </button>
       </div>
-      
+
       {showDropdown && results.length > 0 && (
         <div className="search-dropdown">
           {results.map((item) => (
@@ -96,7 +96,7 @@ const SearchBar = () => {
               </div>
             </div>
           ))}
-          <div 
+          <div
             className="search-dropdown-footer"
             onClick={() => {
               setShowDropdown(false);

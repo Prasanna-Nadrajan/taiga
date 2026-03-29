@@ -177,197 +177,132 @@ const Home = () => {
   return (
     <div className="home-page">
       {/* ========== HERO CAROUSEL ========== */}
-      <div className="hero-carousel" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6)), url(${slide.image}) center/cover no-repeat` }}>
+      <div className="hero-carousel" style={{ backgroundImage: `url(${slide.image})` }}>
+        <div className="hero-gradient-overlay"></div>
         <button className="hero-arrow hero-arrow-left" onClick={prevSlide} aria-label="Previous slide">
-          <FiChevronLeft />
+          <FiChevronLeft className="hero-arrow-icon" />
         </button>
-        <div className="hero-carousel-content">
-
-          <h1 className="hero-title">{slide.title}</h1>
-          <p className="hero-subtitle">{slide.subtitle}</p>
-          <button
-            className="btn btn-primary btn-lg hero-cta"
-            onClick={() => {
-              if (slide.category) {
-                const cat = categories.find((c) => c.name === slide.category);
-                if (cat) handleCategoryTag(cat._id);
-              }
-              document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            {slide.cta}
-          </button>
-        </div>
         <button className="hero-arrow hero-arrow-right" onClick={nextSlide} aria-label="Next slide">
-          <FiChevronRight />
+          <FiChevronRight className="hero-arrow-icon" />
         </button>
-        <div className="hero-dots">
-          {HERO_SLIDES.map((_, idx) => (
-            <button
-              key={idx}
-              className={`hero-dot ${idx === currentSlide ? 'active' : ''}`}
-              onClick={() => goToSlide(idx)}
-              aria-label={`Slide ${idx + 1}`}
-            />
-          ))}
-        </div>
       </div>
 
-      {/* ========== CATEGORY TAGS BAR ========== */}
-      {categories.length > 0 && (
-        <div className="category-tags-bar">
-          <div className="category-tags-inner">
-            <button
-              className={`category-tag ${activeTag === '' ? 'active' : ''}`}
-              onClick={() => { setActiveTag(''); setFilters({ ...filters, category: '' }); }}
-            >
-              🏷️ All
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat._id}
-                className={`category-tag ${activeTag === cat._id ? 'active' : ''}`}
-                onClick={() => handleCategoryTag(cat._id)}
-              >
-                {CATEGORY_ICONS[cat.name] || '📦'} {cat.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ========== FEATURE HIGHLIGHTS STRIP ========== */}
-      <div className="feature-strip">
-        <div className="feature-item">
-          <FiTruck className="feature-icon" />
-          <div>
-            <strong>Free Shipping</strong>
-            <span>On orders above ₹999</span>
-          </div>
-        </div>
-        <div className="feature-item">
-          <FiRefreshCw className="feature-icon" />
-          <div>
-            <strong>Easy Returns</strong>
-            <span>30-day return policy</span>
-          </div>
-        </div>
-        <div className="feature-item">
-          <FiShield className="feature-icon" />
-          <div>
-            <strong>Secure Payment</strong>
-            <span>100% secure checkout</span>
-          </div>
-        </div>
-        <div className="feature-item">
-          <FiHeadphones className="feature-icon" />
-          <div>
-            <strong>24/7 Support</strong>
-            <span>Dedicated help center</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ========== DEALS OF THE DAY ========== */}
-      {dealsProducts.length > 0 && (
-        <div className="home-section">
-          <div className="section-header">
-            <h2>🔥 Deals of the Day</h2>
-            <span className="section-subtitle">Top picks at the best prices</span>
-          </div>
-          <div className="product-scroll-row">
-            {dealsProducts.map((product) => (
-              <div className="scroll-card" key={product._id}>
-                <ProductCard product={product} onAddToCart={addToCart} />
+      <div className="home-content-container">
+        {/* Amazon-style Card Layout Grid */}
+        <div className="gw-card-layout">
+          {/* Card 1: Deals of the Day */}
+          {dealsProducts.length > 0 && (
+            <div className="gw-card">
+              <div className="gw-card-header">Deals of the Day</div>
+              <div className="gw-card-body grid-layout">
+                {dealsProducts.slice(0, 4).map(p => (
+                   <Link to={`/product/${p._id}`} key={p._id} className="gw-product-item">
+                     <img src={p.image} alt={p.name} />
+                     <span className="gw-product-title">{p.name}</span>
+                   </Link>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ========== TOP RATED ========== */}
-      {topRatedProducts.length > 0 && (
-        <div className="home-section">
-          <div className="section-header">
-            <h2>⭐ Top Rated</h2>
-            <span className="section-subtitle">Loved by our customers</span>
-          </div>
-          <div className="product-scroll-row">
-            {topRatedProducts.map((product) => (
-              <div className="scroll-card" key={product._id}>
-                <ProductCard product={product} onAddToCart={addToCart} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ========== NEW ARRIVALS ========== */}
-      {recentProducts.length > 0 && (
-        <div className="home-section">
-          <div className="section-header">
-            <h2>✨ New Arrivals</h2>
-            <span className="section-subtitle">Just dropped — don't miss out</span>
-          </div>
-          <div className="product-scroll-row">
-            {recentProducts.map((product) => (
-              <div className="scroll-card" key={product._id}>
-                <ProductCard product={product} onAddToCart={addToCart} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ========== MAIN PRODUCT GRID ========== */}
-      <div id="products-section" className="home-container" style={{ display: 'flex', gap: '20px', padding: '20px' }}>
-        {/* SIDEBAR FOR DESKTOP */}
-        <div className="home-sidebar" style={{ display: 'flex', flexDirection: 'column' }}>
-           <FilterSidebar categories={categories} onFilterChange={setFilters} />
-        </div>
-
-        <div className="home-main" style={{ flex: 1 }}>
-          <div className="filters-bar" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <div className="search-results-info">
-              {search && <span>Showing results for: <strong>"{search}"</strong></span>}
-            </div>
-            
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="filter-select"
-            >
-              <option value="">Sort by: Newest</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
-            </select>
-          </div>
-
-          <div className="section-header" style={{ marginBottom: '16px' }}>
-            <h2>🛍️ All Products</h2>
-          </div>
-
-          {loading ? (
-            <div className="loading-screen">
-              <div className="spinner"></div>
-            </div>
-          ) : products.length === 0 ? (
-            <div className="empty-state">
-              <h2>No products found</h2>
-              <p>Try adjusting your search or filters</p>
-            </div>
-          ) : (
-            <div className="products-grid">
-              {products.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onAddToCart={addToCart}
-                />
-              ))}
+              <div className="gw-card-footer"><Link to="/">See all deals</Link></div>
             </div>
           )}
+
+          {/* Card 2: Top Rated */}
+          {topRatedProducts.length > 0 && (
+            <div className="gw-card">
+              <div className="gw-card-header">Top Rated Products</div>
+              <div className="gw-card-body grid-layout">
+                {topRatedProducts.slice(0, 4).map(p => (
+                   <Link to={`/product/${p._id}`} key={p._id} className="gw-product-item">
+                     <img src={p.image} alt={p.name} />
+                     <span className="gw-product-title">{p.name}</span>
+                   </Link>
+                ))}
+              </div>
+              <div className="gw-card-footer"><Link to="/">Shop top rated</Link></div>
+            </div>
+          )}
+
+          {/* Card 3: New Arrivals (single item) */}
+          {recentProducts.length > 0 && (
+            <div className="gw-card">
+              <div className="gw-card-header">New Arrivals</div>
+              <div className="gw-card-body single-layout">
+                <Link to={`/product/${recentProducts[0]._id}`}>
+                  <img src={recentProducts[0].image} alt={recentProducts[0].name} className="gw-single-img" />
+                </Link>
+              </div>
+              <div className="gw-card-footer"><Link to="/">Explore new arrivals</Link></div>
+            </div>
+          )}
+
+          {/* Card 4: Categories */}
+          {categories.length > 0 && (
+            <div className="gw-card">
+              <div className="gw-card-header">Shop by Category</div>
+              <div className="gw-card-body grid-layout">
+                {categories.slice(0, 4).map(c => (
+                   <div key={c._id} className="gw-product-item" onClick={() => handleCategoryTag(c._id)} style={{cursor: 'pointer'}}>
+                     <div className="category-placeholder">{CATEGORY_ICONS[c.name] || '📦'}</div>
+                     <span className="gw-product-title">{c.name}</span>
+                   </div>
+                ))}
+              </div>
+              <div className="gw-card-footer"><Link to="/">See all categories</Link></div>
+            </div>
+          )}
+        </div>
+
+        {/* ========== MAIN PRODUCT GRID ========== */}
+        <div id="products-section" className="main-products-section" style={{ padding: '0 20px 20px' }}>
+          <div className="section-header" style={{ marginBottom: '16px', background: '#fff', padding: '12px', border: '1px solid #ddd' }}>
+            <h2 style={{ fontSize: '18px', margin: 0 }}>🛍️ All Products</h2>
+          </div>
+
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <div className="home-sidebar" style={{ display: 'flex', flexDirection: 'column', width: '250px' }}>
+               <FilterSidebar categories={categories} onFilterChange={setFilters} />
+            </div>
+
+            <div className="home-main" style={{ flex: 1 }}>
+              <div className="filters-bar" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', background: '#fff', padding: '10px', border: '1px solid #ddd' }}>
+                <div className="search-results-info" style={{marginBottom: 0}}>
+                  {search && <span>Showing results for: <strong>"{search}"</strong></span>}
+                </div>
+                
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">Sort by: Featured</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  <option value="rating">Avg. Customer Review</option>
+                </select>
+              </div>
+
+              {loading ? (
+                <div className="loading-screen">
+                  <div className="spinner"></div>
+                </div>
+              ) : products.length === 0 ? (
+                <div className="empty-state" style={{background: '#fff', padding: '40px', textAlign: 'center'}}>
+                  <h2>No products found</h2>
+                  <p>Try adjusting your search or filters</p>
+                </div>
+              ) : (
+                <div className="products-grid">
+                  {products.map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      product={product}
+                      onAddToCart={addToCart}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

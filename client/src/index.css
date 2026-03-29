@@ -2,8 +2,8 @@
 
 :root {
   /* Background hierarchy */
-  --bg-primary: #f3f4f6;
-  --bg-secondary: #eaecf0;
+  --bg-primary: #EAEDED;
+  --bg-secondary: #f3f3f3;
   --bg-card: #ffffff;
   --bg-card-hover: #f8f8f8;
   --bg-input: #ffffff;
@@ -12,17 +12,17 @@
   --bg-nav-search: #fff;
 
   /* Text */
-  --text-primary: #111111;
-  --text-secondary: #555555;
+  --text-primary: #0F1111;
+  --text-secondary: #565959;
   --text-muted: #888888;
   --text-nav: #ffffff;
   --text-nav-muted: #cccccc;
 
   /* Brand accent — Amazon-style orange */
-  --accent: #ff9900;
-  --accent-dark: #e87c00;
-  --accent-hover: #ffac31;
-  --accent-glow: rgba(255, 153, 0, 0.15);
+  --accent: #febd69;
+  --accent-dark: #f3a847;
+  --accent-hover: #f3a847;
+  --accent-glow: rgba(253, 168, 71, 0.4);
 
   /* Semantic colours */
   --success: #007600;
