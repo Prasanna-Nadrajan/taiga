@@ -59,10 +59,16 @@ const SearchBar = () => {
   return (
     <div className="search-bar-container" ref={dropdownRef}>
       <div className="search-input-wrapper">
-        <FiSearch className="search-icon" />
+        <select className="search-category-select">
+          <option value="All">All</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Watches">Watches</option>
+          <option value="Beauty">Beauty</option>
+        </select>
         <input
           type="text"
-          placeholder="Search products, categories..."
+          placeholder="Search Amazon.in"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -70,6 +76,9 @@ const SearchBar = () => {
           className="search-input predictive"
         />
         {loading && <FiLoader className="search-spinner" />}
+        <button className="search-btn" onClick={() => handleKeyDown({ key: 'Enter' })}>
+          <FiSearch className="search-btn-icon" />
+        </button>
       </div>
       
       {showDropdown && results.length > 0 && (

@@ -10,32 +10,28 @@ const HERO_SLIDES = [
     title: 'Mega Electronics Sale',
     subtitle: 'Up to 50% off on premium gadgets & accessories',
     cta: 'Shop Electronics',
-    gradient: 'linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
-    emoji: '💻',
+    image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1600&q=80',
     category: 'Electronics',
   },
   {
     title: 'New Arrivals',
     subtitle: 'Discover the latest collection — fresh styles every week',
     cta: 'Explore Now',
-    gradient: 'linear-gradient(135deg, #232526 0%, #414345 100%)',
-    emoji: '✨',
+    image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1600&q=80',
     category: '',
   },
   {
     title: 'Watches Collection',
     subtitle: 'Premium timepieces at unbeatable prices',
     cta: 'Shop Watches',
-    gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    emoji: '⌚',
+    image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1600&q=80',
     category: 'Watches',
   },
   {
     title: 'Daily Essentials',
     subtitle: 'Stock up on utilities you need — great value guaranteed',
     cta: 'Browse Utilities',
-    gradient: 'linear-gradient(135deg, #2d1b69 0%, #4a2c8a 50%, #6b3fa0 100%)',
-    emoji: '🛒',
+    image: 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=1600&q=80',
     category: 'Utilities',
   },
 ];
@@ -181,12 +177,12 @@ const Home = () => {
   return (
     <div className="home-page">
       {/* ========== HERO CAROUSEL ========== */}
-      <div className="hero-carousel" style={{ background: slide.gradient }}>
+      <div className="hero-carousel" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6)), url(${slide.image}) center/cover no-repeat` }}>
         <button className="hero-arrow hero-arrow-left" onClick={prevSlide} aria-label="Previous slide">
           <FiChevronLeft />
         </button>
         <div className="hero-carousel-content">
-          <span className="hero-emoji">{slide.emoji}</span>
+
           <h1 className="hero-title">{slide.title}</h1>
           <p className="hero-subtitle">{slide.subtitle}</p>
           <button
